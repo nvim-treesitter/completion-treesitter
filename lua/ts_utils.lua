@@ -15,6 +15,10 @@ function M.get_node_text(node, bufnr)
 	return string.sub(line, start_col+1, end_col)
 end
 
+function M.tree_root(bufnr)
+	return ts.get_parser(bufnr or 0):parse():root()
+end
+
 function M.has_parser(lang)
     return #api.nvim_get_runtime_file('parser/' .. lang .. '.*', false) > 0
 end
@@ -34,7 +38,7 @@ function M.is_parent(source, dest)
 end
 
 function M.expression_at_point(tsroot)
-	local tsroot = tsroot or ts.get_parser(0):parse():root()
+	local tsroot = tsroot or M.tree_root()
 
 	local cursor = vim.api.nvim_win_get_cursor(0)
 	local current_node = tsroot:named_descendant_for_range(cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2])
