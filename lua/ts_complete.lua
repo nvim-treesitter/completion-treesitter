@@ -1,41 +1,8 @@
 local api = vim.api
 local ts = vim.treesitter
+local utils = require'ts_utils'
 
 local M = {}
-
-function M.has_parser(lang)
-    return #api.nvim_get_runtime_file('parser/' .. lang .. '.*', false) > 0
-end
-
-local function expression_at_point(tsroot)
-	local cursor = vim.api.nvim_win_get_cursor(0)
-	local current_node = tsroot:named_descendant_for_range(cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2])
-	return current_node
-end
-
--- Copied from runtime treesitter.lua
-local function get_node_text(node, bufnr)
-	local start_row, start_col, end_row, end_col = node:range()
-	if start_row ~= end_row then
-		return nil
-	end
-	local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row+1, true)[1]
-	return string.sub(line, start_col+1, end_col)
-end
-
--- is dest in a parent of source
-local function is_parent(source, dest)
-	local current = source
-	while current ~= nil do
-		if current == dest then
-			return true
-		end
-
-		current = current:parent()
-	end
-
-	return false
-end
 
 local function smallestContext(tree, parser, source)
 	-- Step 1 get current context
@@ -57,7 +24,7 @@ local function smallestContext(tree, parser, source)
 end
 
 function M.getCompletionItems(prefix, score_func, bufnr)
-    if M.has_parser(api.nvim_buf_get_option(bufnr, 'ft')) then
+    if utils.has_parser(api.nvim_buf_get_option(bufnr, 'ft')) then
         local parser = ts.get_parser(bufnr)
         local tstree = parser:parse():root()
 
@@ -68,7 +35,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 
         local tsquery = ts.parse_query(parser.lang, ident_query)
 
-        local at_point = expression_at_point(tstree)
+        local at_point = utils.expression_at_point(tstree)
         local context_here = smallestContext(tstree, parser, at_point)
 
         local complete_items = {}
@@ -77,12 +44,12 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         -- Step 2 find correct completions
         for id, node in tsquery:iter_captures(tstree, parser.bufnr, row_start, row_end) do
             local name = tsquery.captures[id] -- name of the capture in the query
-            local node_text = get_node_text(node)
+            local node_text = utils.get_node_text(node)
 
             -- Only consider items in current scope, and not already met
             local score = score_func(prefix, node_text)
             if score < #prefix/2
-                and (is_parent(node, context_here) or smallestContext(tstree, parser, node) == nil or name == "func")
+                and (utils.is_parent(node, context_here) or smallestContext(tstree, parser, node) == nil or name == "func")
                 and not vim.tbl_contains(found, node_text) then
                 table.insert(complete_items, {
                     word = node_text,
