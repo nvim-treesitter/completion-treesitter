@@ -1,4 +1,4 @@
-" Last Change: 2020 mar 20
+" Last Change: 2020 avr 04
 
 
 let b:completion_context_query = '((function_definition) @context)'
@@ -12,3 +12,5 @@ let b:completion_ident_query = '(function_declarator declarator: (identifier) @f
             \ (pointer_declarator declarator: (identifier) @var)
             \ (init_declarator declarator: (identifier) @var)
             \ (declaration declarator: (identifier) @var)'
+
+let b:completion_use_query = '((identifier) @ident (eq? @ident "%s"))'

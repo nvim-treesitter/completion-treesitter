@@ -36,3 +36,13 @@ endfunction
 function! completion_treesitter#select_context()
 	call s:visual_node(luaeval('require"ts_textobj".context_at_point()'))
 endfunction
+
+function! completion_treesitter#highlight_usages()
+	let l:usages = luaeval('require"ts_textobj".find_usages()')
+
+	call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
+
+	for [l:line, l:start, l:end] in l:usages
+		call nvim_buf_add_highlight(0, g:completion_ts_ns, 'Visual', l:line, l:start, l:end)
+	endfor
+endfunction
