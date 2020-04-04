@@ -23,4 +23,12 @@ function M.node_up_range(start_row, start_col, end_row, end_col)
 	return node_range_to_vim(node:parent() or node)
 end
 
+function M.context_at_point()
+	local parser = ts.get_parser(0)
+	local node = utils.expression_at_point()
+	local tree = utils.tree_root()
+
+	return node_range_to_vim(utils.smallestContext(tree, parser, node) or tree)
+end
+
 return M

@@ -6,4 +6,10 @@ endif
 
 lua local comp_ts = require'ts_complete'
 
-vnoremap <silent> gt :<C-U>call completion_treesitter#select_incr()<CR>
+function! s:text_obj_decl(mapping, funcname)
+	execute printf("vnoremap <silent> %s :<C-U>call %s()<CR>", a:mapping, a:funcname)
+	execute printf("omap <silent> %s :normal v%s<CR>", a:mapping, a:mapping)
+endfunction
+
+call s:text_obj_decl('gn', 'completion_treesitter#select_incr')
+call s:text_obj_decl('gf', 'completion_treesitter#select_context')

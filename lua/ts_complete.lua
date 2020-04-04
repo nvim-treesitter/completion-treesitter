@@ -4,25 +4,6 @@ local utils = require'ts_utils'
 
 local M = {}
 
-local function smallestContext(tree, parser, source)
-	-- Step 1 get current context
-	local contexts_query = ts.parse_query(parser.lang, api.nvim_buf_get_var(parser.bufnr, 'completion_context_query'))
-
-	local row_start, _, row_end, _ = tree:range()
-	local contexts = {}
-
-	for _, node in contexts_query:iter_captures(tree, parser.bufnr, row_start, row_end) do
-		table.insert(contexts, node)
-	end
-
-	local current = source
-	while not vim.tbl_contains(contexts, current) and current ~= nil do
-		current = current:parent()
-	end
-
-	return current
-end
-
 function M.getCompletionItems(prefix, score_func, bufnr)
     if utils.has_parser(api.nvim_buf_get_option(bufnr, 'ft')) then
         local parser = ts.get_parser(bufnr)
@@ -36,7 +17,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local tsquery = ts.parse_query(parser.lang, ident_query)
 
         local at_point = utils.expression_at_point(tstree)
-        local context_here = smallestContext(tstree, parser, at_point)
+        local context_here = utils.smallestContext(tstree, parser, at_point)
 
         local complete_items = {}
         local found = {}
@@ -49,7 +30,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
             -- Only consider items in current scope, and not already met
             local score = score_func(prefix, node_text)
             if score < #prefix/2
-                and (utils.is_parent(node, context_here) or smallestContext(tstree, parser, node) == nil or name == "func")
+                and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == nil or name == "func")
                 and not vim.tbl_contains(found, node_text) then
                 table.insert(complete_items, {
                     word = node_text,

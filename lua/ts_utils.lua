@@ -45,4 +45,23 @@ function M.expression_at_point(tsroot)
 	return current_node
 end
 
+function M.smallestContext(tree, parser, source)
+	-- Step 1 get current context
+	local contexts_query = ts.parse_query(parser.lang, api.nvim_buf_get_var(parser.bufnr, 'completion_context_query'))
+
+	local row_start, _, row_end, _ = tree:range()
+	local contexts = {}
+
+	for _, node in contexts_query:iter_captures(tree, parser.bufnr, row_start, row_end) do
+		table.insert(contexts, node)
+	end
+
+	local current = source
+	while not vim.tbl_contains(contexts, current) and current ~= nil do
+		current = current:parent()
+	end
+
+	return current
+end
+
 return M
