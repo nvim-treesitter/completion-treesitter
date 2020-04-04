@@ -13,9 +13,16 @@ There is still some goals for the plugin:
 # TODO
 That's the ideas I had in mind at start, but feel free to suggest anything !
 
-  - [x] Completion
+  - [ ] Completion
     - [x] Basic
     - [x] Suggest only symbol in current scope
     - [ ] Intelligent suggestions (based on types for examples)
     - [ ] Include file handling (`:h include-search`)
-  - [ ] Text objects
+  - [x] Text objects
+    - [x] Incremental selection
+    - [x] Current context
+  - [ ] Refactoring helpers
+    - [x] Highlight identifiers at point
+    - [ ] Find definition/declaration
+    - [ ] "Intelligent" search/replace
+    - [ ] Signature help
