@@ -3,6 +3,15 @@ Treesitter source and more for [completion-nvim](https://github.com/haorenW1025/
 
 This is a basic completion source based on the treesitter api of neovim.
 
+# Quickstart
+
+Open a buffer of a supported filetype (only c for now) and enjoy !
+Actually, you will see two things : if you go on any identifier, its usages and definition should highlight automatically.
+
+An other thing is that the plugin provides two text objects :
+  - `gn` an incrementally growing node (identifier, expression, line, ...)
+  - `gf` current context/function.
+
 # Goals
 The aim of the plugin is mainly to fiddle a bit with treesitter, and a nice way is completion, but there is many things we can do with it.
 
@@ -19,8 +28,8 @@ That's the ideas I had in mind at start, but feel free to suggest anything !
     - [ ] Intelligent suggestions (based on types for examples)
     - [ ] Include file handling (`:h include-search`)
   - [x] Text objects
-    - [x] Incremental selection
-    - [x] Current context
+    - [x] Incremental selection `gn`
+    - [x] Current context `gf`
   - [ ] Refactoring helpers
     - [x] Highlight identifiers at point
     - [ ] Find definition/declaration
