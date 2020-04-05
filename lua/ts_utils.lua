@@ -3,7 +3,9 @@
 local api = vim.api
 local ts = vim.treesitter
 
-local M = {}
+local M = {
+	parser = nil
+}
 
 -- Copied from runtime treesitter.lua
 function M.get_node_text(node, bufnr)
@@ -16,11 +18,12 @@ function M.get_node_text(node, bufnr)
 end
 
 function M.tree_root(bufnr)
-	return ts.get_parser(bufnr or 0):parse():root()
+	return M.get_parser(bufnr or 0):parse():root()
 end
 
 function M.has_parser(lang)
-    return #api.nvim_get_runtime_file('parser/' .. lang .. '.*', false) > 0
+	local lang = lang or api.nvim_buf_get_option(0, 'filetype')
+	return #api.nvim_get_runtime_file('parser/' .. lang .. '.*', false) > 0
 end
 
 -- is dest in a parent of source
@@ -57,11 +60,20 @@ function M.smallestContext(tree, parser, source)
 	end
 
 	local current = source
-	while not vim.tbl_contains(contexts, current) and current ~= nil do
+	repeat
 		current = current:parent()
-	end
+	until (vim.tbl_contains(contexts, current) or current == nil)
 
-	return current
+	return current or tree
+end
+
+function M.get_parser()
+	if M.has_parser() then
+		if not M.parser then
+			M.parser = ts.get_parser(0)
+		end
+		return M.parser
+	end
 end
 
 return M

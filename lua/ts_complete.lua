@@ -30,7 +30,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
             -- Only consider items in current scope, and not already met
             local score = score_func(prefix, node_text)
             if score < #prefix/2
-                and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == nil or name == "func")
+                and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == tstree or name == "func")
                 and not vim.tbl_contains(found, node_text) then
                 table.insert(complete_items, {
                     word = node_text,

@@ -1,10 +1,12 @@
-" Last Change: 2020 avr 04
+" Last Change: 2020 avr 05
 
 function! s:visual_node(node_range)
 	let [l:cursor_start, l:cursor_end] = a:node_range
-	call cursor(l:cursor_start[0]+1, l:cursor_start[1]+1)
-	normal v
-	call cursor(l:cursor_end[0]+1, l:cursor_end[1])
+	if !emupty(l:cursor_start) && !empty(l:cursor_end)
+		call cursor(l:cursor_start[0]+1, l:cursor_start[1]+1)
+		normal v
+		call cursor(l:cursor_end[0]+1, l:cursor_end[1])
+	endif
 endfunction
 
 function! completion_treesitter#select_node_at_point()
@@ -45,4 +47,10 @@ function! completion_treesitter#highlight_usages()
 	for [l:line, l:start, l:end] in l:usages
 		call nvim_buf_add_highlight(0, g:completion_ts_ns, 'Visual', l:line, l:start, l:end)
 	endfor
+
+	let [l:start, l:end] = luaeval('require"ts_textobj".find_definition()')
+
+	if !empty(l:start) && !empty(l:end) && l:start[0] == l:end[0]
+		call nvim_buf_add_highlight(0, g:completion_ts_ns, 'Search', l:start[0], l:start[1], l:end[1])
+	endif
 endfunction
