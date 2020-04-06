@@ -11,6 +11,7 @@ let b:completion_ident_type_name = "identifier"
 " The other @-tag will be used to name the completion item during completion
 let b:completion_def_query = [
 			\ '(variable_declarator (identifier) @def @var)',
+			\ '(function (function_name (identifier) (property_identifier) @def @func))',
 			\ '(function (function_name (identifier) @def @func))',
 			\ '(parameters (identifier) @def @param)',
 			\ ]
