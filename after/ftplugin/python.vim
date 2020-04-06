@@ -10,7 +10,7 @@ let b:completion_ident_type_name = "identifier"
 " a given identifier, it is mandatory to have an @def in it to tag the identifier of the declaration.
 " The other @-tag will be used to name the completion item during completion
 let b:completion_def_query = [
-			\ '(function_definition name: (identifier) @func def)',
+			\ '(function_definition name: (identifier) @func @def)',
 			\ '(parameters (identifier) @param @def)',
 			\ '(assignment left: (expression_list (identifier) @var @def))',
 			\ ]

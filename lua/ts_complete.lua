@@ -22,8 +22,6 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local complete_items = {}
         local found = {}
 
-		print(ident_query)
-
         -- Step 2 find correct completions
         for id, node in tsquery:iter_captures(tstree, parser.bufnr, row_start, row_end) do
             local name = tsquery.captures[id] -- name of the capture in the query
