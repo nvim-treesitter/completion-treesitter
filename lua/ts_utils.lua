@@ -12,7 +12,7 @@ function M.prepare_def_query(ident_text)
 	local final_query = ""
 
 	for _, subquery in ipairs(def_query) do
-		final_query = final_query .. string.format(subquery, ident_text)
+		final_query = final_query .. string.format("(%s %s)", subquery, ident_text)
 	end
 
 	return final_query

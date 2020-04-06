@@ -16,12 +16,12 @@ let b:completion_ident_type_name = "identifier"
 " a given identifier, it is mandatory to have an @def in it to tag the identifier of the declaration.
 " The other @-tag will be used to name the completion item during completion
 let b:completion_def_query = [
-			\ '((function_declarator declarator: (identifier) @def @func) %s)',
-			\ '((preproc_def name: (identifier) @def @preproc) %s)',
-			\ '((preproc_function_def name: (identifier) @def @preproc) %s)',
-			\ '((pointer_declarator declarator: (identifier) @def @var) %s)',
-			\ '((parameter_declaration declarator: (identifier) @def @param) %s)',
-			\ '((init_declarator declarator: (identifier) @def @param) %s)',
-			\ '((array_declarator declarator: (identifier) @def @var) %s)',
-            \ '((declaration declarator: (identifier) @def @var) %s)'
+			\ '(function_declarator declarator: (identifier) @def @func)',
+			\ '(preproc_def name: (identifier) @def @preproc)',
+			\ '(preproc_function_def name: (identifier) @def @preproc)',
+			\ '(pointer_declarator declarator: (identifier) @def @var)',
+			\ '(parameter_declaration declarator: (identifier) @def @param)',
+			\ '(init_declarator declarator: (identifier) @def @param)',
+			\ '(array_declarator declarator: (identifier) @def @var)',
+            \ '(declaration declarator: (identifier) @def @var)'
 			\ ]
