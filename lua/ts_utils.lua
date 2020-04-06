@@ -7,6 +7,17 @@ local M = {
 	parser = nil
 }
 
+function M.prepare_def_query(ident_text)
+	local def_query = api.nvim_buf_get_var(0, 'completion_def_query')
+	local final_query = ""
+
+	for _, subquery in ipairs(def_query) do
+		final_query = final_query .. string.format(subquery, ident_text)
+	end
+
+	return final_query
+end
+
 -- Copied from runtime treesitter.lua
 function M.get_node_text(node, bufnr)
 	local start_row, start_col, end_row, end_col = node:range()

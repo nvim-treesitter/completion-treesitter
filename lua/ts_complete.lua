@@ -5,12 +5,12 @@ local utils = require'ts_utils'
 local M = {}
 
 function M.getCompletionItems(prefix, score_func, bufnr)
-    if utils.has_parser(api.nvim_buf_get_option(bufnr, 'ft')) then
+    if utils.has_parser() then
         local parser = ts.get_parser(bufnr)
         local tstree = parser:parse():root()
 
         -- Get all identifiers
-        local ident_query = api.nvim_buf_get_var(bufnr, 'completion_ident_query')
+		local ident_query = utils.prepare_def_query("")
 
         local row_start, _, row_end, _ = tstree:range()
 
@@ -22,6 +22,8 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local complete_items = {}
         local found = {}
 
+		print(ident_query)
+
         -- Step 2 find correct completions
         for id, node in tsquery:iter_captures(tstree, parser.bufnr, row_start, row_end) do
             local name = tsquery.captures[id] -- name of the capture in the query
@@ -29,7 +31,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 
             -- Only consider items in current scope, and not already met
             local score = score_func(prefix, node_text)
-            if score < #prefix/2
+            if name ~= "def" and score < #prefix/2
                 and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == tstree or name == "func")
                 and not vim.tbl_contains(found, node_text) then
                 table.insert(complete_items, {

@@ -36,14 +36,8 @@ function M.context_at_point()
 end
 
 local function get_definition(parser, tree, node)
-	local def_query = api.nvim_buf_get_var(0, 'completion_def_query')
-
 	local node_text = utils.get_node_text(node)
-	local final_query = ""
-
-	for _, subquery in ipairs(def_query) do
-		final_query = final_query .. string.format(subquery, node_text)
-	end
+	local final_query = utils.prepare_def_query(string.format('(eq? @def "%s")', node_text))
 
 	local tsquery = ts.parse_query(parser.lang, final_query)
 	local row_start, _, row_end, _ = tree:range()
