@@ -14,6 +14,7 @@ let b:completion_ident_type_name = "identifier"
 
 " This is the query that will be used to search for the definition of
 " a given identifier, it is mandatory to have an @def in it to tag the identifier of the declaration.
+" The other @-tag will be used to name the completion item during completion
 let b:completion_def_query = [
 			\ '((function_declarator declarator: (identifier) @def @func) %s)',
 			\ '((preproc_def name: (identifier) @def @preproc) %s)',

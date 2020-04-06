@@ -10,7 +10,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local tstree = parser:parse():root()
 
         -- Get all identifiers
-		local ident_query = utils.prepare_def_query("")
+		local ident_query = utils.prepare_def_query(""):gsub("@def", "")
 
         local row_start, _, row_end, _ = tstree:range()
 
@@ -31,7 +31,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 
             -- Only consider items in current scope, and not already met
             local score = score_func(prefix, node_text)
-            if name ~= "def" and score < #prefix/2
+            if score < #prefix/2
                 and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == tstree or name == "func")
                 and not vim.tbl_contains(found, node_text) then
                 table.insert(complete_items, {
