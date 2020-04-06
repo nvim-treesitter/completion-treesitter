@@ -49,5 +49,6 @@ That's the ideas I had in mind at start, but feel free to suggest anything !
   - [ ] Refactoring helpers
     - [x] Highlight identifiers at point
     - [x] Find definition/declaration
+    - [x] "Intelligent" rename (`completion_treesitter#smart_rename()`)
     - [ ] "Intelligent" search/replace
     - [ ] Signature help

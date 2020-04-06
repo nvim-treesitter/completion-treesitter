@@ -70,13 +70,7 @@ function M.find_definition()
 	end
 end
 
-function M.find_usages()
-	local parser = utils.get_parser()
-	local node = utils.expression_at_point()
-
-	if node:type() == api.nvim_buf_get_var(parser.bufnr, 'completion_ident_type_name') then
-		local tree = utils.tree_root()
-
+local function get_usages(parser, tree, node)
 		-- Get definition
 		local definition, scope = get_definition(parser, tree, node)
 
@@ -90,10 +84,24 @@ function M.find_usages()
 		local usages = {}
 
 		for id, usage in tsquery:iter_captures(scope, parser.bufnr, row_start, row_end) do
-			local start_row, start_col, _, end_col = usage:range()
-			table.insert(usages, {start_row, start_col, end_col})
+			table.insert(usages, usage)
 		end
 		return usages
+end
+
+function M.find_usages()
+	local parser = utils.get_parser()
+	local node = utils.expression_at_point()
+
+	if node:type() == api.nvim_buf_get_var(parser.bufnr, 'completion_ident_type_name') then
+		local tree = utils.tree_root()
+		local positions = {}
+
+		for _, usage in ipairs(get_usages(parser, tree, node)) do
+			local start_row, start_col, _, end_col = usage:range()
+			table.insert(positions, {start_row, start_col, end_col})
+		end
+		return positions
 	else
 		return {}
 	end

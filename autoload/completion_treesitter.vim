@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 05
+" Last Change: 2020 avr 06
 
 function! s:visual_node(node_range)
 	let [l:cursor_start, l:cursor_end] = a:node_range
@@ -53,4 +53,15 @@ function! completion_treesitter#highlight_usages()
 	if !empty(l:start) && !empty(l:end) && l:start[0] == l:end[0]
 		call nvim_buf_add_highlight(0, g:completion_ts_ns, 'Search', l:start[0], l:start[1], l:end[1])
 	endif
+endfunction
+
+function! completion_treesitter#smart_rename()
+	let l:name_new = input('New name : ', expand('<cword>'))
+
+	let l:usages = luaeval('require"ts_textobj".find_usages()')
+
+	for [l:line_nr, l:start, l:end] in reverse(l:usages)
+		let l:line = nvim_buf_get_lines(0, l:line_nr, l:line_nr+1, v:false)[0]
+		call nvim_buf_set_lines(0, l:line_nr, l:line_nr+1, v:false, [ l:line[:(l:start - 1)] . l:name_new . l:line[l:end:] ])
+	endfor
 endfunction
