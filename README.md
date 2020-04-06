@@ -12,6 +12,15 @@ An other thing is that the plugin provides two text objects :
   - `gn` an incrementally growing node (identifier, expression, line, ...)
   - `gf` current context/function.
 
+# Adding new filetypes
+
+For now, you should look the `after/ftplugin/c.vim` file, and [tree-sitter documentation on
+queries](https://tree-sitter.github.io/tree-sitter/syntax-highlighting#queries). Feel free to open an issue if you need
+help, or open a PR if you don't.
+
+If you find a bug in any filetype, or a weird behaviour, open an issue to describe how the behaviour differs from the
+expected one.
+
 # Goals
 The aim of the plugin is mainly to fiddle a bit with treesitter, and a nice way is completion, but there is many things we can do with it.
 
@@ -32,6 +41,6 @@ That's the ideas I had in mind at start, but feel free to suggest anything !
     - [x] Current context `gf`
   - [ ] Refactoring helpers
     - [x] Highlight identifiers at point
-    - [ ] Find definition/declaration
+    - [x] Find definition/declaration
     - [ ] "Intelligent" search/replace
     - [ ] Signature help
