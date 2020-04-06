@@ -20,7 +20,6 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local context_here = utils.smallestContext(tstree, parser, at_point)
 
         local complete_items = {}
-        local found = {}
 
         -- Step 2 find correct completions
         for id, node in tsquery:iter_captures(tstree, parser.bufnr, row_start, row_end) do
@@ -31,16 +30,15 @@ function M.getCompletionItems(prefix, score_func, bufnr)
             local score = score_func(prefix, node_text)
             if score < #prefix/2
                 and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == tstree or name == "func")
-                and not vim.tbl_contains(found, node_text) then
+                then
                 table.insert(complete_items, {
                     word = node_text,
                     kind = name,
                     score = score,
                     icase = 1,
-                    dup = 1,
+                    dup = 0,
                     empty = 1,
                 })
-                table.insert(found, node_text)
             end
         end
 
