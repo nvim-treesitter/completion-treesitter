@@ -21,6 +21,13 @@ help, or open a PR if you don't.
 If you find a bug in any filetype, or a weird behaviour, open an issue to describe how the behaviour differs from the
 expected one.
 
+Current supported filetypes:
+| Filetype	| Parser |
+|----		|----|
+| C			| Neovim builtin |
+| Python	| [tree-sitter-python](https://github.com/tree-sitter/tree-sitter-python) |
+
+
 # Goals
 The aim of the plugin is mainly to fiddle a bit with treesitter, and a nice way is completion, but there is many things we can do with it.
 
