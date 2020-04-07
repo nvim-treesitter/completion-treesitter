@@ -22,25 +22,27 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local complete_items = {}
 
         -- Step 2 find correct completions
-        for id, node in tsquery:iter_captures(tstree, parser.bufnr, row_start, row_end) do
-            local name = tsquery.captures[id] -- name of the capture in the query
-            local node_text = utils.get_node_text(node)
+		for pattern, match in tsquery:iter_matches(tstree, parser.bufnr, row_start, row_end) do
+			for id, node in pairs(match) do
+				local name = tsquery.captures[id] -- name of the capture in the query
+				local node_text = utils.get_node_text(node)
+				local _, node_scope = utils.get_definition(parser, tstree, node)
 
-            -- Only consider items in current scope, and not already met
-            local score = score_func(prefix, node_text)
-            if score < #prefix/2
-                and (utils.is_parent(node, context_here) or utils.smallestContext(tstree, parser, node) == tstree or name == "func")
-                then
-                table.insert(complete_items, {
-                    word = node_text,
-                    kind = name,
-                    score = score,
-                    icase = 1,
-                    dup = 0,
-                    empty = 1,
-                })
-            end
-        end
+				-- Only consider items in current scope, and not already met
+				local score = score_func(prefix, node_text)
+				if score < #prefix/2
+					and (utils.is_parent(at_point, node_scope) or name == "f")
+					then
+						table.insert(complete_items, {
+							word = node_text,
+							kind = name,
+							score = score,
+							icase = 1,
+							dup = 0,
+							empty = 1, })
+				end
+			end
+		end
 
         return complete_items
     else

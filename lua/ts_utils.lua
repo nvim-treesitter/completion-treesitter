@@ -7,6 +7,26 @@ local M = {
 	parsers = {}
 }
 
+function M.get_definition(parser, tree, node)
+	local node_text = M.get_node_text(node)
+	local final_query = M.prepare_def_query(string.format('(eq? @def "%s")', node_text))
+
+	local tsquery = ts.parse_query(parser.lang, final_query)
+	local row_start, _, row_end, _ = tree:range()
+	-- Get current context, and search upwards
+	local current_context = node
+	repeat
+		current_context = M.smallestContext(tree, parser, current_context)
+		for _, def in tsquery:iter_captures(current_context, parser.bufnr, row_start, row_end) do
+			return def, current_context
+		end
+
+		current_context = current_context:parent()
+	until current_context == nil
+
+	return node, tree
+end
+
 function M.prepare_def_query(ident_text)
 	local def_query = api.nvim_buf_get_var(0, 'completion_def_query')
 	local final_query = ""
@@ -29,7 +49,7 @@ function M.get_node_text(node, bufnr)
 end
 
 function M.tree_root(bufnr)
-	return M.get_parser(bufnr or 0):parse():root()
+	return M.get_parser():parse():root()
 end
 
 function M.has_parser(lang)

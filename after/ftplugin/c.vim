@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 06
+" Last Change: 2020 avr 07
 " These variables are the heart of vim treesitter, they allow the plugin to interact simply with the syntax tree.
 " If you consider adding a new filetype consider using https://tree-sitter.github.io/tree-sitter/playground to test your 
 " queries on a given source code.
@@ -14,14 +14,18 @@ let b:completion_ident_type_name = "identifier"
 
 " This is the query that will be used to search for the definition of
 " a given identifier, it is mandatory to have an @def in it to tag the identifier of the declaration.
-" The other @-tag will be used to name the completion item during completion
+" It is also possible to add a @type in an item, it will later be used to determine the type of the item.
+" The other @-tag will be used to name the completion item during completion, it be like the "kind" part of complete_items
 let b:completion_def_query = [
-			\ '(function_declarator declarator: (identifier) @def @func)',
-			\ '(preproc_def name: (identifier) @def @preproc)',
-			\ '(preproc_function_def name: (identifier) @def @preproc)',
-			\ '(pointer_declarator declarator: (identifier) @def @var)',
-			\ '(parameter_declaration declarator: (identifier) @def @param)',
-			\ '(init_declarator declarator: (identifier) @def @param)',
-			\ '(array_declarator declarator: (identifier) @def @var)',
-            \ '(declaration declarator: (identifier) @def @var)'
+			\ '(function_declarator declarator: (identifier) @def @f)',
+			\ '(preproc_def name: (identifier) @def @d)',
+			\ '(preproc_function_def name: (identifier) @def @d)',
+			\ '(pointer_declarator declarator: (identifier) @def @v)',
+			\ '(parameter_declaration declarator: (identifier) @def @v)',
+			\ '(init_declarator declarator: (identifier) @def @v)',
+			\ '(array_declarator declarator: (identifier) @def @v)',
+			\ '(declaration declarator: (identifier) @def @v)',
+			\ '(enum_specifier name: (*) @type (enumerator_list (enumerator name: (identifier) @def @v)))',
+			\ '(field_declaration declarator:(field_identifier) @def @m)',
+			\ '(type_definition declarator: (type_identifier) @def @t)'
 			\ ]

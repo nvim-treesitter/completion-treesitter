@@ -35,26 +35,6 @@ function M.context_at_point()
 	return node_range_to_vim(utils.smallestContext(tree, parser, node) or tree)
 end
 
-local function get_definition(parser, tree, node)
-	local node_text = utils.get_node_text(node)
-	local final_query = utils.prepare_def_query(string.format('(eq? @def "%s")', node_text))
-
-	local tsquery = ts.parse_query(parser.lang, final_query)
-	local row_start, _, row_end, _ = tree:range()
-	-- Get current context, and search upwards
-	local current_context = node
-	repeat
-		current_context = utils.smallestContext(tree, parser, current_context)
-		for _, def in tsquery:iter_captures(current_context, parser.bufnr, row_start, row_end) do
-			return def, current_context
-		end
-
-		current_context = current_context:parent()
-	until current_context == nil
-
-	return node, tree
-end
-
 function M.find_definition()
 	local parser = utils.get_parser()
 	local node = utils.expression_at_point()
@@ -62,7 +42,7 @@ function M.find_definition()
 	if node:type() == api.nvim_buf_get_var(parser.bufnr, 'completion_ident_type_name') then
 		local tree = utils.tree_root()
 
-		local def, _ = get_definition(parser, tree, node)
+		local def, _ = utils.get_definition(parser, tree, node)
 
 		return node_range_to_vim(def)
 	else
@@ -72,7 +52,7 @@ end
 
 local function get_usages(parser, tree, node)
 		-- Get definition
-		local definition, scope = get_definition(parser, tree, node)
+		local definition, scope = utils.get_definition(parser, tree, node)
 
 		local ident_query = '((%s) @ident (eq? @ident "%s"))'
 		local ident_type = api.nvim_buf_get_var(parser.bufnr, 'completion_ident_type_name')

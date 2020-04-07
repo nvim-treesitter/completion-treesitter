@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 06
+" Last Change: 2020 avr 07
 
 " This query Extracts context definitions (like functions, of for example, Rust bracketed contexts)
 let b:completion_context_query = '((function_definition) @context)'
@@ -10,7 +10,7 @@ let b:completion_ident_type_name = "identifier"
 " a given identifier, it is mandatory to have an @def in it to tag the identifier of the declaration.
 " The other @-tag will be used to name the completion item during completion
 let b:completion_def_query = [
-			\ '(function_definition name: (identifier) @func @def)',
-			\ '(parameters (identifier) @param @def)',
-			\ '(assignment left: (expression_list (identifier) @var @def))',
+			\ '(function_definition name: (identifier) @f @def)',
+			\ '(parameters (identifier) @v @def)',
+			\ '(assignment left: (expression_list (identifier) @v @def))',
 			\ ]
