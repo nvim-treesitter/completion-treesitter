@@ -4,7 +4,7 @@ local api = vim.api
 local ts = vim.treesitter
 
 local M = {
-	parser = nil
+	parsers = {}
 }
 
 function M.prepare_def_query(ident_text)
@@ -80,10 +80,11 @@ end
 
 function M.get_parser()
 	if M.has_parser() then
-		if not M.parser then
-			M.parser = ts.get_parser(0)
+		if not M.parsers[api.nvim_get_current_buf()] then
+			local parser = ts.get_parser(0)
+			M.parsers[parser.bufnr] = parser;
 		end
-		return M.parser
+		return M.parsers[api.nvim_get_current_buf()]
 	end
 end
 
