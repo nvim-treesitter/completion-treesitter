@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 06
+" Last Change: 2020 avr 07
 
 " This query Extracts context definitions (like functions, of for example, Rust bracketed contexts)
 let b:completion_context_query = '((function) @context)'
@@ -14,4 +14,5 @@ let b:completion_def_query = [
 			\ '(function (function_name (identifier) (property_identifier) @def @func))',
 			\ '(function (function_name (identifier) @def @func))',
 			\ '(parameters (identifier) @def @param)',
+			\ '(loop_expression (identifier) @def @var)',
 			\ ]
