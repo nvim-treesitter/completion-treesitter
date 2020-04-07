@@ -41,17 +41,21 @@ endfunction
 
 function! completion_treesitter#highlight_usages()
 	let l:usages = luaeval('require"ts_textobj".find_usages()')
+	let [l:buf, l:cur_line, l:cur_col, l:offset, l:curswant] = getcurpos()
 
-	call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
+	call nvim_buf_clear_namespace(l:buf, g:completion_ts_ns, 0, -1)
 
 	for [l:line, l:start, l:end] in l:usages
-		call nvim_buf_add_highlight(0, g:completion_ts_ns, 'Visual', l:line, l:start, l:end)
+		if !(( l:line + 1 ) == l:cur_line && ( l:start + 1 ) < l:cur_col && ( l:end + 1 ) > l:cur_col)
+			call nvim_buf_add_highlight(l:buf, g:completion_ts_ns, 'Visual', l:line, l:start, l:end)
+		endif
 	endfor
 
 	let [l:start, l:end] = luaeval('require"ts_textobj".find_definition()')
 
-	if !empty(l:start) && !empty(l:end) && l:start[0] == l:end[0]
-		call nvim_buf_add_highlight(0, g:completion_ts_ns, 'Search', l:start[0], l:start[1], l:end[1])
+	if !empty(l:start) && !empty(l:end) && l:start[0] == l:end[0] &&
+				\ !(( l:start[0] + 1 ) == l:cur_line && ( l:start[1] + 1 ) < l:cur_col && ( l:end[1] + 1 ) > l:cur_col)
+		call nvim_buf_add_highlight(l:buf, g:completion_ts_ns, 'Search', l:start[0], l:start[1], l:end[1])
 	endif
 endfunction
 
