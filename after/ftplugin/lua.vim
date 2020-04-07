@@ -1,7 +1,7 @@
 " Last Change: 2020 avr 07
 
 " This query Extracts context definitions (like functions, of for example, Rust bracketed contexts)
-let b:completion_context_query = ['function']
+let b:completion_context_query = ['function', 'if_statement', 'for_in_statement', 'repeat_statement']
 
 " This is the name of an identifier node (as shown in treesitter playground), it will be used
 let b:completion_ident_type_name = "identifier"
