@@ -16,6 +16,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local tsquery = utils.parse_query(ident_query)
 
         local at_point = utils.expression_at_point()
+		local line_current, _, _ = at_point:start()
 
         local complete_items = {}
 
@@ -25,11 +26,13 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 				local name = tsquery.captures[id] -- name of the capture in the query
 				local node_text = utils.get_node_text(node)
 				local node_scope = utils.smallestContext(tstree, node)
+				local start_line_node, _, _= node:start()
 
 				-- Only consider items in current scope, and not already met
 				local score = score_func(prefix, node_text)
 				if score < #prefix/2
 					and (utils.is_parent(at_point, node_scope) or name == "f")
+					and (start_line_node <= line_current)
 					then
 						table.insert(complete_items, {
 							word = node_text,
