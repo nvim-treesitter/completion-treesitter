@@ -4,10 +4,21 @@ local api = vim.api
 local ts = vim.treesitter
 
 local M = {
-	parsers = {}
 }
 
-function M.get_definition(parser, tree, node)
+local function get_parser()
+	if M.has_parser() then
+		local buf = api.nvim_get_current_buf()
+		if not M[buf] then
+			local parser = ts.get_parser(0)
+			M[buf] = {parser=parser, cache={}};
+		end
+		return M[buf].parser
+	end
+end
+
+function M.get_definition(tree, node)
+	local parser = get_parser()
 	local node_text = M.get_node_text(node)
 	local final_query = M.prepare_def_query(string.format('(eq? @def "%s")', node_text))
 
@@ -16,7 +27,7 @@ function M.get_definition(parser, tree, node)
 	-- Get current context, and search upwards
 	local current_context = node
 	repeat
-		current_context = M.smallestContext(tree, parser, current_context)
+		current_context = M.smallestContext(tree, current_context)
 		for _, def in tsquery:iter_captures(current_context, parser.bufnr, row_start, row_end) do
 			return def, current_context
 		end
@@ -49,7 +60,7 @@ function M.get_node_text(node, bufnr)
 end
 
 function M.tree_root(bufnr)
-	return M.get_parser():parse():root()
+	return get_parser():parse():root()
 end
 
 function M.has_parser(lang)
@@ -79,7 +90,8 @@ function M.expression_at_point(tsroot)
 	return current_node
 end
 
-function M.smallestContext(tree, parser, source)
+function M.smallestContext(tree, source)
+	local parser = get_parser()
 	-- Step 1 get current context
 	local contexts_query = ts.parse_query(parser.lang, api.nvim_buf_get_var(parser.bufnr, 'completion_context_query'))
 
@@ -98,14 +110,8 @@ function M.smallestContext(tree, parser, source)
 	return current or tree
 end
 
-function M.get_parser()
-	if M.has_parser() then
-		if not M.parsers[api.nvim_get_current_buf()] then
-			local parser = ts.get_parser(0)
-			M.parsers[parser.bufnr] = parser;
-		end
-		return M.parsers[api.nvim_get_current_buf()]
-	end
+function M.parse_query(query)
+	return ts.parse_query(get_parser().lang, query)
 end
 
 return M

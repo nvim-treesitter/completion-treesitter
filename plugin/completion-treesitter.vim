@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 06
+" Last Change: 2020 avr 07
 
 if !exists('g:loaded_completion')
 	finish
@@ -16,5 +16,5 @@ let g:completion_ts_ns = nvim_create_namespace('completion-treesitter')
 call s:text_obj_decl('gn', 'completion_treesitter#select_incr')
 call s:text_obj_decl('gf', 'completion_treesitter#select_context')
 
-autocmd CursorHold *.c,*.py,*.lua call completion_treesitter#highlight_usages()
-autocmd CursorMoved *.c,*.py,*.lua call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
+autocmd CursorHold *.c,*.py call completion_treesitter#highlight_usages()
+autocmd CursorMoved *.c,*.py call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
