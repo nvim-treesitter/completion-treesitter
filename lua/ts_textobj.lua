@@ -31,7 +31,7 @@ function M.context_at_point()
 	local node = utils.expression_at_point()
 	local tree = utils.tree_root()
 
-	return node_range_to_vim(utils.smallestContext(tree, node) or tree)
+	return node_range_to_vim(utils.smallestContext(tree, node))
 end
 
 function M.find_definition()
