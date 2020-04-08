@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 07
+" Last Change: 2020 avr 08
 " These variables are the heart of vim treesitter, they allow the plugin to interact simply with the syntax tree.
 " If you consider adding a new filetype consider using https://tree-sitter.github.io/tree-sitter/playground to test your 
 " queries on a given source code.
@@ -7,7 +7,7 @@
 
 
 " This query Extracts context definitions (like functions, of for example, Rust bracketed contexts)
-let b:completion_context_query = ['function_definition']
+let b:completion_context_query = ['function_definition', 'for_statement']
 
 " This is the name of an identifier node (as shown in treesitter playground), it will be used
 let b:completion_ident_type_name = "identifier"

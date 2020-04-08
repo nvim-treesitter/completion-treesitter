@@ -16,7 +16,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
         local tsquery = utils.parse_query(ident_query)
 
         local at_point = utils.expression_at_point()
-		local line_current, _, _ = at_point:start()
+		local _, line_current, _, _, _ = unpack(vim.fn.getcurpos())
 
         local complete_items = {}
 
@@ -52,7 +52,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 end
 
 M.complete_item = {
-  item = M.getCompletionItems
+	item = M.getCompletionItems
 }
 
 if require'source' then
