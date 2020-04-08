@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 07
+" Last Change: 2020 avr 08
 
 function! s:visual_node(node_range)
 	let [l:cursor_start, l:cursor_end] = a:node_range
@@ -46,7 +46,8 @@ function! completion_treesitter#highlight_usages()
 	call nvim_buf_clear_namespace(l:buf, g:completion_ts_ns, 0, -1)
 
 	for [l:line, l:start, l:end] in l:usages
-		if !(( l:line + 1 ) == l:cur_line && ( l:start + 1 ) < l:cur_col && ( l:end + 1 ) > l:cur_col)
+		if (g:complete_ts_highlight_at_point ||
+					\ !(( l:line + 1 ) == l:cur_line && l:start < l:cur_col && ( l:end + 1 ) > l:cur_col))
 			call nvim_buf_add_highlight(l:buf, g:completion_ts_ns, 'Visual', l:line, l:start, l:end)
 		endif
 	endfor
@@ -54,7 +55,8 @@ function! completion_treesitter#highlight_usages()
 	let [l:start, l:end] = luaeval('require"ts_textobj".find_definition()')
 
 	if !empty(l:start) && !empty(l:end) && l:start[0] == l:end[0] &&
-				\ !(( l:start[0] + 1 ) == l:cur_line && ( l:start[1] + 1 ) < l:cur_col && ( l:end[1] + 1 ) > l:cur_col)
+				\ ( g:complete_ts_highlight_at_point ||
+				\ !(( l:start[0] + 1 ) == l:cur_line && l:start[1] < l:cur_col && ( l:end[1] + 1 ) > l:cur_col) )
 		call nvim_buf_add_highlight(l:buf, g:completion_ts_ns, 'Search', l:start[0], l:start[1], l:end[1])
 	endif
 endfunction
