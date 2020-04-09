@@ -17,6 +17,14 @@ local function get_parser()
 	end
 end
 
+local function get_match_field(query, match, field)
+	for id, capture in pairs(match) do
+		if query.captures[id] == field then
+			return capture
+		end
+	end
+end
+
 function M.get_definition(tree, node)
 	local parser = get_parser()
 	local node_text = M.get_node_text(node)
@@ -24,12 +32,17 @@ function M.get_definition(tree, node)
 
 	local tsquery = ts.parse_query(parser.lang, final_query)
 	local row_start, _, row_end, _ = tree:range()
+	local node_start, _, _ = node:start()
 	-- Get current context, and search upwards
 	local current_context = node
 	repeat
 		current_context = M.smallestContext(tree, current_context)
-		for _, def in tsquery:iter_captures(current_context, parser.bufnr, row_start, row_end) do
-			return def, current_context
+		for _, match in tsquery:iter_matches(current_context, parser.bufnr, row_start, row_end) do
+			local def = get_match_field(tsquery, match, "def")
+			local def_start, _, _ = def:start()
+			if def_start < node_start then
+				return def, current_context
+			end
 		end
 
 		current_context = current_context:parent()
@@ -94,9 +107,9 @@ function M.smallestContext(tree, source)
 	-- Step 1 get current context
 	local contexts = api.nvim_buf_get_var(get_parser().bufnr, 'completion_context_query')
 	local current = source
-	repeat
+	while current ~= nil and not vim.tbl_contains(contexts, current:type()) do
 		current = current:parent()
-	until (current == nil or vim.tbl_contains(contexts, current:type()))
+	end
 
 	return current or tree
 end
