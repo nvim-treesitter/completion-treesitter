@@ -70,10 +70,16 @@ function M.prepare_def_query(ident_text)
 end
 
 -- Copied from runtime treesitter.lua
-function M.get_node_text(node, bufnr)
+function M.get_node_text(node, bufnr, line)
 	local start_row, start_col, end_row, end_col = node:range()
 	if start_row ~= end_row then
-		return api.nvim_buf_get_lines(bufnr, start_row, end_row, false)[1]
+		local index
+		if line ~= nil and line >= start_row then
+			index = line - start_row + 1
+		else
+			index = 1
+		end
+		return api.nvim_buf_get_lines(bufnr, start_row, end_row, false)[line or 1]
 	else
 		local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row+1, true)[1]
 		return string.sub(line, start_col+1, end_col)

@@ -25,11 +25,11 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 			local obj = utils.prepare_match(tsquery, match)
 
 			local node = obj.def
-			local node_text = utils.get_node_text(node)
 			local node_scope = utils.smallestContext(tstree, node)
 			local start_line_node, _, _= node:start()
 
-			local full_text = utils.get_node_text(obj.declaration)
+			local node_text = utils.get_node_text(node, bufnr, start_line_node)
+			local full_text = utils.get_node_text(obj.declaration, bufnr)
 
 			-- Only consider items in current scope, and not already met
 			local score = score_func(prefix, node_text)

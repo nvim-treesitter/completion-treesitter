@@ -15,6 +15,7 @@ let b:completion_def_query = [
 			\ '(function (function_name (identifier) @assoc (property_identifier) @def @f))',
 			\ '(function (function_name (identifier) @def @f))',
 			\ '(local_function (identifier) @def @f)',
-			\ '(parameters (identifier) @def @v)',
+			\ '(function (parameters (identifier) @def @v))',
+			\ '(local_function (parameters (identifier) @def @v))',
 			\ '(loop_expression (identifier) @def @v)',
 			\ ]
