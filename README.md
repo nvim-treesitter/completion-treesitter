@@ -70,6 +70,10 @@ All of these functionnalities are available for all supported filetypes.
 
 [![asciicast](https://asciinema.org/a/318049.svg)](https://asciinema.org/a/318049)
 
+## Intelligent rename
+
+[![asciicast](https://asciinema.org/a/318061.svg)](https://asciinema.org/a/318061)
+
 # Adding new filetypes
 
 For now, you should look the `after/ftplugin/c.vim` file, and [tree-sitter documentation on
