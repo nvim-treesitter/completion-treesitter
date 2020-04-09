@@ -4,26 +4,12 @@ local utils = require'ts_utils'
 
 local M = {}
 
-local function prepare_match(query, match)
-	local object = {}
-	for id, node in pairs(match) do
-		local name = query.captures[id] -- name of the capture in the query
-		if string.len(name) == 1 then
-			object.kind = name
-		else
-			object[name] = node
-		end
-	end
-
-	return object
-end
-
 function M.getCompletionItems(prefix, score_func, bufnr)
     if utils.has_parser() then
         local tstree = utils.tree_root()
 
         -- Get all identifiers
-		local ident_query = utils.prepare_def_query("")
+		local ident_query = utils.prepare_def_query("@declaration")
 
         local row_start, _, row_end, _ = tstree:range()
 
@@ -36,12 +22,14 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 
         -- Step 2 find correct completions
 		for pattern, match in tsquery:iter_matches(tstree, bufnr, row_start, row_end) do
-			local obj = prepare_match(tsquery, match)
+			local obj = utils.prepare_match(tsquery, match)
 
 			local node = obj.def
 			local node_text = utils.get_node_text(node)
 			local node_scope = utils.smallestContext(tstree, node)
 			local start_line_node, _, _= node:start()
+
+			local full_text = utils.get_node_text(obj.declaration)
 
 			-- Only consider items in current scope, and not already met
 			local score = score_func(prefix, node_text)
@@ -52,6 +40,7 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 					table.insert(complete_items, {
 						word = node_text,
 						kind = obj.kind,
+						menu = full_text,
 						score = score,
 						icase = 1,
 						dup = 0,

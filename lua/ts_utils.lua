@@ -6,6 +6,20 @@ local ts = vim.treesitter
 local M = {
 }
 
+function M.prepare_match(query, match)
+	local object = {}
+	for id, node in pairs(match) do
+		local name = query.captures[id] -- name of the capture in the query
+		if string.len(name) == 1 then
+			object.kind = name
+		else
+			object[name] = node
+		end
+	end
+
+	return object
+end
+
 local function get_parser()
 	if M.has_parser() then
 		local buf = api.nvim_get_current_buf()
@@ -14,14 +28,6 @@ local function get_parser()
 			M[buf] = {parser=parser, cache={}};
 		end
 		return M[buf].parser
-	end
-end
-
-local function get_match_field(query, match, field)
-	for id, capture in pairs(match) do
-		if query.captures[id] == field then
-			return capture
-		end
 	end
 end
 
@@ -38,7 +44,8 @@ function M.get_definition(tree, node)
 	repeat
 		current_context = M.smallestContext(tree, current_context)
 		for _, match in tsquery:iter_matches(current_context, parser.bufnr, row_start, row_end) do
-			local def = get_match_field(tsquery, match, "def")
+			local prepared = M.prepare_match(tsquery, match)
+			local def = prepared.def
 			local def_start, _, _ = def:start()
 			if def_start < node_start then
 				return def, current_context
@@ -66,10 +73,11 @@ end
 function M.get_node_text(node, bufnr)
 	local start_row, start_col, end_row, end_col = node:range()
 	if start_row ~= end_row then
-		return nil
+		return api.nvim_buf_get_lines(bufnr, start_row, end_row, false)[1]
+	else
+		local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row+1, true)[1]
+		return string.sub(line, start_col+1, end_col)
 	end
-	local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row+1, true)[1]
-	return string.sub(line, start_col+1, end_col)
 end
 
 function M.tree_root(bufnr)
