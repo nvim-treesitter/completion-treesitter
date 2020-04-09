@@ -14,7 +14,7 @@ function! completion_treesitter#select_incr()
 endfunction
 
 function! completion_treesitter#select_context()
-	call s:visual_node(luaeval('require"ts_textobj".context_at_point()'))
+	call s:visual_node(luaeval('require"ts_textobj".context_incremental()'))
 endfunction
 
 function! completion_treesitter#highlight_usages()

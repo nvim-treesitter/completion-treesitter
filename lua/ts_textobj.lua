@@ -32,18 +32,22 @@ function M.node_incremental()
 	end
 end
 
-function M.context_at_point_range()
-	local node = utils.expression_at_point()
-	local tree = utils.tree_root()
+function M.context_incremental()
+	local _, sel_start_line, sel_start_col, _ = unpack(vim.fn.getpos("'<"))
+	local _, sel_end_line, sel_end_col, _ = unpack(vim.fn.getpos("'>"))
 
-	return node_range_to_vim(utils.smallestContext(tree, node))
-end
+	local root = utils.tree_root()
+	local node = utils.smallestContext(root,
+		root:named_descendant_for_range(sel_start_line-1, sel_start_col-1, sel_end_line-1, sel_end_col))
 
-function M.context_up_range()
-	local tree = utils.tree_root()
-	local node = root:named_descendant_for_range(start_row, start_col, end_row, end_col)
+	local node_start_row, node_start_col, node_end_row, node_end_col = node:range()
 
-	return node_range_to_vim(utils.smallestContext(tree, node:parent() or node))
+	if (sel_start_line-1) == node_start_row and (sel_start_col-1) == node_start_col
+		and (sel_end_line-1) == node_end_row and sel_end_col == node_end_col then
+		return node_range_to_vim(utils.smallestContext(root, node:parent() or node))
+	else
+		return node_range_to_vim(node)
+	end
 end
 
 function M.find_definition()
