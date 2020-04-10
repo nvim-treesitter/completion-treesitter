@@ -53,8 +53,8 @@ Open a buffer of a supported filetype and enjoy !
 Actually, you will see two things : if you go on any identifier, its usages and definition should highlight automatically.
 
 An other thing is that the plugin provides two text objects :
-  - `gn` an incrementally growing node (identifier, expression, line, ...)
-  - `gf` current context/function.
+  - `grn` an incrementally growing node (identifier, expression, line, ...)
+  - `grc` incrementally growing contexts (if-else, for loop, function, ...)
 
 And as you start typing, suggestions will appear !
 
@@ -107,8 +107,8 @@ That's the ideas I had in mind at start, but feel free to suggest anything !
     - [ ] Intelligent suggestions (based on types for examples)
     - [ ] Include file handling (`:h include-search`)
   - [x] Text objects
-    - [x] Incremental selection `gn`
-    - [x] Current context `gf`
+    - [x] Incremental selection `grn`
+    - [x] Current context `grc`
   - [ ] Refactoring helpers
     - [x] Highlight identifiers at point
     - [x] Find definition/declaration

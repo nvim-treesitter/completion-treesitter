@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 09
+" Last Change: 2020 avr 10
 
 if !exists('g:loaded_completion')
 	finish
@@ -14,20 +14,21 @@ if !exists('g:complete_ts_default_mappings')
 	let g:complete_ts_default_mappings = 1
 end
 
-function! s:text_obj_decl(mapping, funcname)
-	execute printf("vnoremap <silent> %s :<C-U>call %s()<CR>", a:mapping, a:funcname)
-	execute printf("omap <silent> %s :normal v%s<CR>", a:mapping, a:mapping)
+function! s:text_obj_decl(plug_mapping, default_mapping, funcname)
+	let l:formatted_plug = printf('<Plug>(%s)', a:plug_mapping)
+	if empty(hasmapto(l:formatted_plug))
+		execute printf('vmap %s %s', a:default_mapping, l:formatted_plug)
+		execute printf('omap %s %s', a:default_mapping, l:formatted_plug)
+	endif
+
+	execute printf("vnoremap <silent> %s :<C-U>call %s()<CR>", l:formatted_plug, a:funcname)
+	execute printf("omap <silent> %s :normal v%s<CR>", l:formatted_plug, l:formatted_plug)
 endfunction
 
 let g:completion_ts_ns = nvim_create_namespace('completion-treesitter')
 
-if g:complete_ts_default_mappings
-	call s:text_obj_decl('gtn', 'completion_treesitter#select_incr')
-	call s:text_obj_decl('gtc', 'completion_treesitter#select_context')
-else
-	call s:text_obj_decl('<Plug>(completion-treesitter-incremental)', 'completion_treesitter#select_incr')
-	call s:text_obj_decl('<Plug>(completion-treesitter-context)', 'completion_treesitter#select_context')
-endif
+call s:text_obj_decl('completion-treesitter-node', 'grn', 'completion_treesitter#select_incr')
+call s:text_obj_decl('completion-treesitter-context', 'grc','completion_treesitter#select_context')
 
 augroup CompletionTS
 	autocmd CursorHold *.c,*.py,*.lua call completion_treesitter#highlight_usages()
