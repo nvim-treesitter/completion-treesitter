@@ -38,7 +38,7 @@ function M.get_definition(tree, node)
 
 	local tsquery = ts.parse_query(parser.lang, final_query)
 	local row_start, _, row_end, _ = tree:range()
-	local node_start, _, _ = node:start()
+	local _, _, node_start = node:start()
 	-- Get current context, and search upwards
 	local current_context = node
 	repeat
@@ -46,8 +46,9 @@ function M.get_definition(tree, node)
 		for _, match in tsquery:iter_matches(current_context, parser.bufnr, row_start, row_end) do
 			local prepared = M.prepare_match(tsquery, match)
 			local def = prepared.def
-			local def_start, _, _ = def:start()
-			if def_start < node_start then
+			local _, _, def_start = def:start()
+
+			if def_start <= node_start then
 				return def, current_context
 			end
 		end

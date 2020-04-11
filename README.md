@@ -88,7 +88,7 @@ Current supported filetypes:
 |----		|----|
 | C			| Neovim builtin |
 | Python	| [tree-sitter-python](https://github.com/tree-sitter/tree-sitter-python) |
-| Lua		| [tree-sitter-lua](https://github.com/Azganoth/tree-sitter-lua) |
+| Lua		| [tree-sitter-lua](https://github.com/vigoux/tree-sitter-lua) |
 
 
 # Goals
