@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 09
+" Last Change: 2020 avril 12
 
 function! s:visual_node(node_range)
 	let [l:cursor_start, l:cursor_end] = a:node_range
@@ -7,6 +7,10 @@ function! s:visual_node(node_range)
 		normal v
 		call cursor(l:cursor_end[0]+1, l:cursor_end[1])
 	endif
+endfunction
+
+function! completion_treesitter#foldexpr()
+	return luaeval(printf('require"ts_navigation".get_fold_indic(%d)', v:lnum))
 endfunction
 
 function! completion_treesitter#select_incr()

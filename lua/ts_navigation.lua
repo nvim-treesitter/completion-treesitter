@@ -32,4 +32,36 @@ function M.list_definitions()
 	vim.fn.setqflist(qf_list, 'r')
 end
 
+function M.get_fold_indic(lnum)
+	local root = utils.tree_root()
+	local line_content = api.nvim_buf_get_lines(0, lnum-1, lnum, false)[1]
+
+	local non_blank = line_content:find("%S")
+
+	if non_blank then
+		local start_index = non_blank - 1
+
+		local node_here = root:named_descendant_for_range(lnum -1, start_index, lnum-1, start_index)
+
+		local function is_multiline(node)
+			local start, _, stop, _ = node:range()
+			return start ~= stop
+		end
+
+
+		-- To determine fold level, count nr of multiline node up from here
+		local level = 0
+		while node_here ~= nil do
+			if is_multiline(node_here) then
+				level = level + 1
+			end
+			node_here = node_here:parent()
+		end
+
+		return tostring(level)
+	else
+		return '='
+	end
+end
+
 return M

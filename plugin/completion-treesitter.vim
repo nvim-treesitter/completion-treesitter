@@ -1,6 +1,6 @@
-" Last Change: 2020 avr 10
+" Last Change: 2020 avril 12
 
-if !exists('g:loaded_completion')
+if !exists('g:loaded_completion') || exists('g:loaded_completion_ts_ns')
 	finish
 endif
 
@@ -29,6 +29,8 @@ let g:completion_ts_ns = nvim_create_namespace('completion-treesitter')
 
 call s:text_obj_decl('completion-treesitter-node', 'grn', 'completion_treesitter#select_incr')
 call s:text_obj_decl('completion-treesitter-context', 'grc','completion_treesitter#select_context')
+
+command! -nargs=0 CompletionTSSymbols call luaeval("require'ts_navigation'.list_definitions()") | copen
 
 augroup CompletionTS
 	autocmd CursorHold *.c,*.py,*.lua call completion_treesitter#highlight_usages()
