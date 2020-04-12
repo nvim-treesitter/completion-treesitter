@@ -58,6 +58,26 @@ An other thing is that the plugin provides two text objects :
 
 And as you start typing, suggestions will appear !
 
+## Using parsers
+
+To use a parser for one of the supported languages clone the parser sources (the python parser for example) :
+```sh
+git clone https://github.com/tree-sitter/tree-sitter-python.git
+```
+
+Then compile it :
+```sh
+gcc -o parser.so -shared src/parser.c src/scanner.cc -I./src -lstdc++
+```
+
+An move it to neovim config files :
+
+```sh
+mv parser.so ~/.config/nvim/parsers/{lang}.so
+```
+
+Where `{lang}` is the filetype corresponding to the parser's language (`python` in above example).
+
 # Examples usages
 
 Some examples usages of the plugin, not only for completion.
@@ -89,7 +109,6 @@ Current supported filetypes:
 | C			| Neovim builtin |
 | Python	| [tree-sitter-python](https://github.com/tree-sitter/tree-sitter-python) |
 | Lua		| [tree-sitter-lua](https://github.com/vigoux/tree-sitter-lua) |
-
 
 # Goals
 The aim of the plugin is mainly to fiddle a bit with treesitter, and a nice way is completion, but there is many things we can do with it.
