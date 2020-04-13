@@ -33,34 +33,34 @@ function M.list_definitions()
 end
 
 function M.get_fold_indic(lnum)
-	local root = utils.tree_root()
-	local line_content = api.nvim_buf_get_lines(0, lnum-1, lnum, false)[1]
+	if utils.has_parser() then
 
-	local non_blank = line_content:find("%S")
+		local function smallest_multiline_containing(node)
+			for index = 0,(node:named_child_count() -1) do
+				local child = node:named_child(index)
+				local start, _, stop, _ = child:range()
 
-	if non_blank then
-		local start_index = non_blank - 1
-
-		local node_here = root:named_descendant_for_range(lnum -1, start_index, lnum-1, start_index)
-
-		local function is_multiline(node)
-			local start, _, stop, _ = node:range()
-			return start ~= stop
-		end
-
-
-		-- To determine fold level, count nr of multiline node up from here
-		local level = 0
-		while node_here ~= nil do
-			if is_multiline(node_here) then
-				level = level + 1
+				if start ~= stop and start <= (lnum -1) and stop >= (lnum -1) then
+					return smallest_multiline_containing(child)
+				end
 			end
-			node_here = node_here:parent()
+
+			return node
 		end
 
-		return tostring(level)
+		local multiline_here = smallest_multiline_containing(utils.tree_root())
+
+		local start, _, stop, _ = multiline_here:range()
+
+		if start == (lnum -1) then
+			return 'a1'
+		elseif stop == (lnum -1) then
+			return 's1'
+		else
+			return '='
+		end
 	else
-		return '='
+		return '0'
 	end
 end
 
