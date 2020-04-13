@@ -15,7 +15,8 @@ Plug 'haorenW1025/completion-nvim'
 Plug 'vigoux/completion-treesitter'
 ```
 
-Then configure `completion-nvim` as you desire, you can use the `ts` source for `lua`, `python` and `c` filetypes, for example :
+## Completion
+Configure `completion-nvim` as you desire, you can use the `ts` source for `lua`, `python` and `c` filetypes, for example :
 ```vim
 " Configure the completion chains
 let g:completion_chain_complete_list = {
@@ -42,23 +43,43 @@ let g:completion_chain_complete_list = {
 			\	],
 			\}
 
-" Highlight the node at point, its usages and definition when cursor holds
-let g:complete_ts_highlight_at_point = 1
-
 " Use completion-nvim in every buffer
 autocmd BufEnter * lua require'completion'.on_attach()
 ```
 
 Open a buffer of a supported filetype and enjoy !
-Actually, you will see two things : if you go on any identifier, its usages and definition should highlight automatically.
 
+## Usages and definition highlighting
+
+If you go on any identifier, its usages and definition will be highlighted (based on `CursorHold`).
+By default, the word under cursor will not be highlighted, but you can enable this by :
+```vim
+" Highlight the node at point, its usages and definition when cursor holds
+let g:complete_ts_highlight_at_point = 1
+```
+
+## Text objects
 An other thing is that the plugin provides two text objects :
   - `grn` an incrementally growing node (identifier, expression, line, ...)
   - `grc` incrementally growing contexts (if-else, for loop, function, ...)
 
-And as you start typing, suggestions will appear !
+## Intelligent rename
 
-## Using parsers
+With the cursor on an identifier type `:call completion_treesitter#smart_rename()<CR>` to start renaming it, its definition,
+and usages.
+
+## Folding
+
+To start using tree-sitter-based folding, simply add the following to your `init.vim` :
+```vim
+set foldexr=completion_treesitter#foldexpr()
+set foldmethod=expr
+```
+
+As said in `:h fold-expr`, it could be slow in some cases. No benchmarks has been done though, and for regular usages, no
+delay has been observed.
+
+# Using parsers
 
 To use a parser for one of the supported languages clone the parser sources (the python parser for example) :
 ```sh
@@ -132,4 +153,5 @@ That's the ideas I had in mind at start, but feel free to suggest anything !
     - [x] Highlight identifiers at point
     - [x] Find definition/declaration
     - [x] "Intelligent" rename (`completion_treesitter#smart_rename()`)
+	- [X] Folding (see `:set foldexr=completion_treesitter#foldexpr() foldmethod=expr`)
     - [ ] Signature help
