@@ -35,29 +35,29 @@ end
 function M.get_fold_indic(lnum)
 	if utils.has_parser() then
 
-		local function smallest_multiline_containing(node)
+		local function smallest_multiline_containing(node, level)
 			for index = 0,(node:named_child_count() -1) do
 				local child = node:named_child(index)
 				local start, _, stop, _ = child:range()
 
 				if start ~= stop and start <= (lnum -1) and stop >= (lnum -1) then
-					return smallest_multiline_containing(child)
+					return smallest_multiline_containing(child, level + 1)
 				end
 			end
 
-			return node
+			return node, level
 		end
 
-		local multiline_here = smallest_multiline_containing(utils.tree_root())
+		local multiline_here, level = smallest_multiline_containing(utils.tree_root(), 0)
 
 		local start, _, stop, _ = multiline_here:range()
 
 		if start == (lnum -1) then
-			return 'a1'
+			return string.format(">%d", level)
 		elseif stop == (lnum -1) then
-			return 's1'
+			return string.format('<%d', level)
 		else
-			return '='
+			return tostring(level)
 		end
 	else
 		return '0'
