@@ -1,4 +1,4 @@
-" Last Change: 2020 avril 12
+" Last Change: 2020 avril 14
 
 function! s:visual_node(node_range)
 	let [l:cursor_start, l:cursor_end] = a:node_range
@@ -21,7 +21,7 @@ function! completion_treesitter#select_context()
 	call s:visual_node(luaeval('require"ts_textobj".context_incremental()'))
 endfunction
 
-function! completion_treesitter#highlight_usages()
+function! completion_treesitter#highlight_usages() abort
 	let l:usages = luaeval('require"ts_textobj".find_usages()')
 	let [l:buf, l:cur_line, l:cur_col, l:offset, l:curswant] = getcurpos()
 
@@ -43,7 +43,7 @@ function! completion_treesitter#highlight_usages()
 	endif
 endfunction
 
-function! completion_treesitter#smart_rename()
+function! completion_treesitter#smart_rename() abort
 	let l:name_new = input('New name : ', expand('<cword>'))
 
 	let l:usages = luaeval('require"ts_textobj".find_usages()')

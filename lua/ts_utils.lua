@@ -12,6 +12,7 @@ function M.prepare_match(query, match)
 		local name = query.captures[id] -- name of the capture in the query
 		if string.len(name) == 1 then
 			object.kind = name
+			object.full = node
 		else
 			object[name] = node
 		end
@@ -20,9 +21,9 @@ function M.prepare_match(query, match)
 	return object
 end
 
-local function get_parser()
+local function get_parser(bufnr)
 	if M.has_parser() then
-		local buf = api.nvim_get_current_buf()
+		local buf = bufnr or api.nvim_get_current_buf()
 		if not M[buf] then
 			local parser = ts.get_parser(0)
 			M[buf] = {parser=parser, cache={}};
@@ -88,7 +89,7 @@ function M.get_node_text(node, bufnr, line)
 end
 
 function M.tree_root(bufnr)
-	return get_parser():parse():root()
+	return get_parser(bufnr):parse():root()
 end
 
 function M.has_parser(lang)
