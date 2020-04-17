@@ -72,7 +72,7 @@ and usages.
 
 To start using tree-sitter-based folding, simply add the following to your `init.vim` :
 ```vim
-set foldexr=completion_treesitter#foldexpr()
+set foldexpr=completion_treesitter#foldexpr()
 set foldmethod=expr
 ```
 
@@ -94,7 +94,7 @@ gcc -o parser.so -shared src/parser.c src/scanner.cc -I./src -lstdc++
 An move it to neovim config files :
 
 ```sh
-mv parser.so ~/.config/nvim/parsers/{lang}.so
+mv parser.so ~/.config/nvim/parser/{lang}.so
 ```
 
 Where `{lang}` is the filetype corresponding to the parser's language (`python` in above example).
