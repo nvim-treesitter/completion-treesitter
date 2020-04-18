@@ -50,14 +50,14 @@ function M.get_definition(tree, node)
 			local _, _, def_start = def:start()
 
 			if def_start <= node_start then
-				return def, current_context
+				return prepared, current_context
 			end
 		end
 
 		current_context = current_context:parent()
 	until current_context == nil
 
-	return node, tree
+	return nil, tree
 end
 
 function M.prepare_def_query(ident_text)

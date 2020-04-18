@@ -1,4 +1,4 @@
-" Last Change: 2020 avr 08
+" Last Change: 2020 avril 17
 " These variables are the heart of vim treesitter, they allow the plugin to interact simply with the syntax tree.
 " If you consider adding a new filetype consider using https://tree-sitter.github.io/tree-sitter/playground to test your 
 " queries on a given source code.
@@ -11,6 +11,10 @@ let b:completion_context_query = ['function_definition', 'for_statement']
 
 " This is the name of an identifier node (as shown in treesitter playground), it will be used
 let b:completion_ident_type_name = "identifier"
+
+let b:completion_expected_suggestion = [
+			\ '((field_expression argument:(*) @type field:(field_identifier) @pref) @m)',
+			\]
 
 " This is the query that will be used to search for the definition of
 " a given identifier, it is mandatory to have an @def in it to tag the identifier of the declaration.
@@ -26,6 +30,6 @@ let b:completion_def_query = [
 			\ '(array_declarator declarator: (identifier) @def @v)',
 			\ '(declaration declarator: (identifier) @def @v)',
 			\ '(enum_specifier name: (*) @type (enumerator_list (enumerator name: (identifier) @def @v)))',
-			\ '(field_declaration declarator:(field_identifier) @def @m)',
+			\ '(struct_specifier name: (*) @type (field_declaration_list (field_declaration declarator:(field_identifier) @def @m)))',
 			\ '(type_definition declarator: (type_identifier) @def @t)'
 			\ ]

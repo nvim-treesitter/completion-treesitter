@@ -69,7 +69,11 @@ function M.find_definition()
 
 		local def, _ = utils.get_definition(tree, node)
 
-		return node_range_to_vim(def)
+		if def ~= nil then
+			return node_range_to_vim(def.def)
+		else
+			return node_range_to_vim(node)
+		end
 	else
 		return node_range_to_vim()
 	end
@@ -77,7 +81,7 @@ end
 
 local function get_usages(tree, node)
 	-- Get definition
-	local definition, scope = utils.get_definition(tree, node)
+	local _, scope = utils.get_definition(tree, node)
 
 	local ident_query = '((%s) @ident (eq? @ident "%s"))'
 	local ident_type = api.nvim_buf_get_var(bufnr, 'completion_ident_type_name')
