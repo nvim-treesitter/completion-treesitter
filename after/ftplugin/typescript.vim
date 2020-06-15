@@ -13,5 +13,3 @@ let b:completion_def_query = [
       \'(method_definition parameters: (formal_parameters (optional_parameter (identifier) @def @v)))',
       \'(variable_declarator (identifier) @def @v)'
       \]
-
-
