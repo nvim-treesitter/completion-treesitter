@@ -33,7 +33,7 @@ call s:text_obj_decl('completion-treesitter-context', 'grc','completion_treesitt
 command! -nargs=0 CompletionTSSymbols call luaeval("require'ts_navigation'.list_definitions()") | copen
 
 augroup CompletionTS
-	autocmd CursorHold *.c,*.py,*.lua,*.ts,*.js call completion_treesitter#highlight_usages()
-	autocmd CursorMoved *.c,*.py,*.lua,*.ts,*.js call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
-	autocmd InsertEnter *.c,*.py,*.lua,*.ts,*.js call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
+	autocmd CursorHold *.c,*.py,*.lua,*.ts,*.js,*.java call completion_treesitter#highlight_usages()
+	autocmd CursorMoved *.c,*.py,*.lua,*.ts,*.js,*.java call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
+	autocmd InsertEnter *.c,*.py,*.lua,*.ts,*.js,*.java call nvim_buf_clear_namespace(0, g:completion_ts_ns, 0, -1)
 augroup END
