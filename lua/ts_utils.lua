@@ -72,11 +72,15 @@ function M.get_definition(tree, node)
 end
 
 function M.prepare_def_query(ident_text)
-  local def_query = api.nvim_buf_get_var(0, 'completion_def_query')
+  local success, def_query = pcall(function() 
+    return api.nvim_buf_get_var(0, 'completion_def_query') 
+  end)
   local final_query = ""
 
-  for _, subquery in ipairs(def_query) do
-    final_query = final_query .. string.format("(%s %s)", subquery, ident_text)
+  if success then
+    for _, subquery in ipairs(def_query) do
+      final_query = final_query .. string.format("(%s %s)", subquery, ident_text)
+    end
   end
 
   return final_query
