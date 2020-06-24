@@ -6,6 +6,8 @@ Treesitter source and more for [completion-nvim](https://github.com/haorenW1025/
 
 This is a basic completion source based on the treesitter api of neovim.
 
+**Since v1.0 this only contains a completion source. All other features are being migrated to nvim-treesitter**
+
 # Quickstart
 
 This plugin requires the following plugins:
@@ -56,6 +58,15 @@ Open a buffer of a supported filetype and enjoy !
 
 # Using parsers
 
+## From nvim-treesitter
+
+To install a parser run the following command in nvim for the supported language of your choice :
+```vim
+:TSInstall lua
+```
+
+## From source
+
 To use a parser for one of the supported languages clone the parser sources (the python parser for example) :
 ```sh
 git clone https://github.com/tree-sitter/tree-sitter-python.git
@@ -78,17 +89,6 @@ Where `{lang}` is the filetype corresponding to the parser's language (`python` 
 
 Some examples usages of the plugin, not only for completion.
 All of these functionnalities are available for all supported filetypes.
-
-## Incremental selection
-[![asciicast](https://asciinema.org/a/317904.svg)](https://asciinema.org/a/317904)
-
-## Usage and definition highlighting
-
-[![asciicast](https://asciinema.org/a/318049.svg)](https://asciinema.org/a/318049)
-
-## Intelligent rename
-
-[![asciicast](https://asciinema.org/a/318061.svg)](https://asciinema.org/a/318061)
 
 # Goals
 The aim of the plugin is mainly to fiddle a bit with treesitter, and a nice way is completion, but there is many things we can do with it.
