@@ -85,8 +85,8 @@ function M.getCompletionItems(prefix, score_func, bufnr)
 end
 
 function M.register()
-  if require'source' then
-    require'source'.addCompleteItems('ts', M.complete_item)
+  if require'completion' then
+    require'completion'.addCompletionSource('ts', M.complete_item)
   end
 end
 
