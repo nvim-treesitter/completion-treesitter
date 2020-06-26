@@ -6,7 +6,7 @@ Treesitter source and more for [completion-nvim](https://github.com/haorenW1025/
 
 This is a basic completion source based on the treesitter api of neovim.
 
-**Since v1.0 this only contains a completion source. All other features are being migrated to nvim-treesitter**
+**Since v0.1 this only contains a completion source. All other features are being migrated to nvim-treesitter**
 
 # Quickstart
 
